@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Course Registration System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Student Dashboard</h1>
+            <div class="nav-buttons">
+                <button onclick="logout()" class="logout-btn">Logout</button>
+                <button onclick="deleteAccount()" class="delete-account-btn" 
+                style="background-color:#dc3545; margin-left:10px;">🗑️ Delete Account</button>
+            </div>
+        </div>
+
+        <div class="welcome-card">
+            <h2>Welcome, <span id="studentName">Student</span>!</h2>
+            <p>Register for courses and view your timetable</p>
+        </div>
+
+        <!-- Student Info Card with Total Credits -->
+        <div class="student-info-card">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Student ID:</span>
+                    <span class="info-value" id="studentId">STU001</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Registered Courses:</span>
+                    <span class="info-value" id="registeredCount">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Total Units:</span>
+                    <span class="info-value" id="totalCredits">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="grid-item">
+                <div class="card">
+                    <h3>📋 Available Courses</h3>
+                    <div class="search-section">
+                        <input type="text" id="searchCourse" placeholder="Search by code or title..." onkeyup="filterCourses()">
+                        <select id="filterDay" onchange="filterCourses()">
+                            <option value="">All Days</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <div id="availableCoursesList" class="courses-container">
+                        <p class="loading-text">Loading courses...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="card">
+                    <h3>📅 My Timetable</h3>
+                    <div id="timetable" class="timetable-container">
+                        <p class="loading-text">Register for courses to see your timetable</p>
+                    </div>
+                    <h4 style="margin-top: 30px;">📝 My Registered Courses</h4>
+                    <div id="registeredCoursesList" class="registered-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

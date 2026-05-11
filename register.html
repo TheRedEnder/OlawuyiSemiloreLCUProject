@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Course Registration System</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .register-container {
+            max-width: 550px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 { text-align: center; margin-bottom: 10px; color: #333; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus { outline: none; border-color: #667eea; }
+        .role-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .role-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: #f0f0f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .role-btn.active { background: #667eea; color: white; }
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button[type="submit"]:hover { background: #5a67d8; }
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .login-link a { color: #667eea; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>📝 Create Account</h1>
+        <div class="subtitle">Course Registration System</div>
+        <div id="messageContainer"></div>
+
+        <div class="role-buttons">
+            <div class="role-btn active" id="studentRoleBtn" onclick="setRole('student')">🎓 Student</div>
+            <div class="role-btn" id="lecturerRoleBtn" onclick="setRole('lecturer')">👨‍🏫 Lecturer</div>
+        </div>
+
+        <form id="registerForm" onsubmit="event.preventDefault(); register();">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="fullName" required>
+            </div>
+            <div class="form-group">
+                <label>Username *</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label>Password * (min 6 characters)</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="form-group">
+                <label>Confirm Password *</label>
+                <input type="password" id="confirmPassword" required>
+            </div>
+
+            <!-- Student extra fields -->
+            <div id="studentExtra" style="display: block;">
+                <div class="form-group">
+                    <label>Matric Number (optional)</label>
+                    <input type="text" id="matricNumber" placeholder="e.g., LCU/UG/22/1001">
+                </div>
+                <div class="form-group">
+                    <label>Level *</label>
+                    <select id="level" required>
+                        <option value="100">100 Level</option>
+                        <option value="200">200 Level</option>
+                        <option value="300">300 Level</option>
+                        <option value="400">400 Level</option>
+                        <option value="500">500 Level</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Department *</label>
+                    <select id="studentDept" required>
+                        <option value="">Select Department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Cyber Security">Cyber Security</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        <option value="Computer Engineering">Computer Engineering</option>
+                        <option value="Electrical Engineering">Electrical Engineering</option>
+                        <option value="Law">Law</option>
+                        <option value="Business Administration">Business Administration</option>
+                        <option value="Accounting">Accounting</option>
+                        <option value="Economics">Economics</option>
+                        <option value="Mass Communication">Mass Communication</option>
+                        <option value="Biochemistry">Biochemistry</option>
+                        <option value="Microbiology">Microbiology</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Statistics">Statistics</option>
+                        <option value="English">English</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Lecturer extra fields -->
+            <div id="lecturerExtra" style="display: none;">
+                <div class="form-group">
+                    <label>Department *</label>
+                    <select id="lecturerDept">
+                        <option value="">Select Department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Cyber Security">Cyber Security</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        <option value="Computer Engineering">Computer Engineering</option>
+                        <option value="Electrical Engineering">Electrical Engineering</option>
+                        <option value="Law">Law</option>
+                        <option value="Business Administration">Business Administration</option>
+                        <option value="Accounting">Accounting</option>
+                        <option value="Economics">Economics</option>
+                        <option value="Mass Communication">Mass Communication</option>
+                        <option value="Biochemistry">Biochemistry</option>
+                        <option value="Microbiology">Microbiology</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Statistics">Statistics</option>
+                        <option value="English">English</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="index.html">Login here</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function setRole(role) {
+            // Update button active styles
+            document.getElementById('studentRoleBtn').classList.toggle('active', role === 'student');
+            document.getElementById('lecturerRoleBtn').classList.toggle('active', role === 'lecturer');
+            
+            // Show/hide sections
+            const studentExtra = document.getElementById('studentExtra');
+            const lecturerExtra = document.getElementById('lecturerExtra');
+            studentExtra.style.display = role === 'student' ? 'block' : 'none';
+            lecturerExtra.style.display = role === 'lecturer' ? 'block' : 'none';
+            
+            // Fix required attributes - toggle based on visibility
+            const studentDeptSelect = document.getElementById('studentDept');
+            const lecturerDeptSelect = document.getElementById('lecturerDept');
+            
+            if (role === 'student') {
+                studentDeptSelect.required = true;
+                lecturerDeptSelect.required = false;
+            } else {
+                studentDeptSelect.required = false;
+                lecturerDeptSelect.required = true;
+            }
+            
+            window.selectedRole = role;
+        }
+        
+        // Initial call to set defaults
+        setRole('student');
+    </script>
+</body>
+</html>

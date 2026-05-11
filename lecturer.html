@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Dashboard - Course Registration System</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #888;
+        }
+        .close:hover { color: black; }
+        .modal h3 { margin-bottom: 20px; color: #333; }
+        .edit-course-btn {
+            background-color: #ffc107;
+            color: #333;
+            margin-right: 8px;
+        }
+        .edit-course-btn:hover { background-color: #e0a800; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Lecturer Dashboard</h1>
+            <div class="nav-buttons">
+                <button onclick="logout()" class="logout-btn">Logout</button>
+                <button onclick="deleteAccount()" class="delete-account-btn" 
+                style="background-color:#dc3545; margin-left:10px;">🗑️ Delete Account</button>
+            </div>
+        </div>
+
+        <div class="welcome-card">
+            <h2>Welcome, <span id="lecturerName">Lecturer</span>!</h2>
+            <p>Manage your courses and view enrolled students</p>
+        </div>
+
+        <!-- Add New Course Form -->
+        <div class="card">
+            <h3>➕ Add New Course</h3>
+            <form id="courseForm" onsubmit="addCourse(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Course Code:</label>
+                        <input type="text" id="courseCode" placeholder="e.g., CSC301" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Course Title:</label>
+                        <input type="text" id="courseTitle" placeholder="e.g., Database Systems" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Day:</label>
+                        <select id="courseDay" required>
+                            <option value="">Select Day</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Time Slot *</label>
+                        <select id="courseTime" required>
+                            <option value="">Select time</option>
+                            <option value="08:00-10:00">08:00 - 10:00</option>
+                            <option value="10:00-12:00">10:00 - 12:00</option>
+                            <option value="12:00-14:00">12:00 - 14:00</option>
+                            <option value="14:00-16:00">14:00 - 16:00</option>
+                            <option value="16:00-18:00">16:00 - 18:00</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Venue:</label>
+                        <input type="text" id="courseVenue" placeholder="MLT 101" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Capacity:</label>
+                        <input type="number" id="courseCapacity" placeholder="50" min="1" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Credits (Units):</label>
+                        <input type="number" id="courseCredits" placeholder="3" min="1" value="3" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Course Level *</label>
+                        <select id="courseLevel" required>
+                            <option value="100">100 Level</option>
+                            <option value="200">200 Level</option>
+                            <option value="300">300 Level</option>
+                            <option value="400">400 Level</option>
+                            <option value="500">500 Level</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Add Course</button>
+            </form>
+        </div>
+
+        <!-- My Courses List -->
+        <div class="card">
+            <h3>📋 My Courses</h3>
+            <div id="coursesList">
+                <p class="loading-text">Loading courses...</p>
+            </div>
+        </div>
+
+        <!-- Student Enrollment per Course -->
+        <div class="card">
+            <h3>👥 Student Enrollment</h3>
+            <div id="enrollmentList">
+                <p class="loading-text">Select a course to view enrolled students</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Course Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h3>✏️ Edit Course</h3>
+            <form id="editCourseForm" onsubmit="saveCourseEdit(event)">
+                <input type="hidden" id="editCourseId">
+                <div class="form-group">
+                    <label>Course Code (cannot change)</label>
+                    <input type="text" id="editCourseCode" readonly style="background:#f0f0f0;">
+                </div>
+                <div class="form-group">
+                    <label>Course Title</label>
+                    <input type="text" id="editCourseTitle" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Day</label>
+                        <select id="editCourseDay" required>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Time</label>
+                        <select id="editCourseTime" required>
+                            <option value="08:00-10:00">08:00 - 10:00</option>
+                            <option value="10:00-12:00">10:00 - 12:00</option>
+                            <option value="12:00-14:00">12:00 - 14:00</option>
+                            <option value="14:00-16:00">14:00 - 16:00</option>
+                            <option value="16:00-18:00">16:00 - 18:00</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Venue</label>
+                        <input type="text" id="editCourseVenue" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Capacity</label>
+                        <input type="number" id="editCourseCapacity" min="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Credits (Units)</label>
+                    <input type="number" id="editCourseCredits" min="1" required>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top: 15px;">Save Changes</button>
+            </form>
+            <div class="form-group">
+                <label>Course Level</label>
+                <select id="editCourseLevel" required>
+                    <option value="100">100 Level</option><option value="200">200 Level</option>
+                    <option value="300">300 Level</option><option value="400">400 Level</option>
+                    <option value="500">500 Level</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

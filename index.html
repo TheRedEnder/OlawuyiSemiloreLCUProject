@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Course Registration System</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .login-box {
+            max-width: 450px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 15px;
+        }
+        .login-btn:hover {
+            background: #5a67d8;
+        }
+        .register-link {
+            text-align: center;
+            margin: 20px 0;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .register-link p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        .demo-credentials {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .demo-credentials h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .demo-credentials p {
+            color: #666;
+            font-size: 13px;
+            margin: 5px 0;
+            padding: 5px;
+            background: white;
+            border-radius: 5px;
+        }
+        .demo-credentials strong {
+            color: #667eea;
+        }
+        .note {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>📚 Course Registration System</h1>
+                <p>Welcome back! Please login to your account</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+            <button onclick="login()" class="login-btn">Login</button>
+            
+
+            <div class="register-link">
+                <p>Don't have an account?</p>
+                <a href="register.html">Create New Account →</a>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
