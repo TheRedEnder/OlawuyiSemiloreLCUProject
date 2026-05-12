@@ -538,3 +538,50 @@ button:hover {
         font-size: 10px;
     }
 }
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(3px);
+    overflow-y: auto;  /* Enables vertical scrolling on modal backdrop */
+}
+
+.modal-content {
+    background: white;
+    margin: 30px auto;  /* Reduced top margin for small screens */
+    padding: 25px;
+    width: 90%;
+    max-width: 550px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+    max-height: 90vh;   /* Limit height to viewport */
+    overflow-y: auto;   /* Scroll inside modal if content too tall */
+}
+
+.close {
+    position: sticky;
+    top: 0;
+    right: 0;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #888;
+    background: white;
+    padding: 0 5px;
+}
+.close:hover { color: black; }
+
+/* Ensure form elements don't overflow */
+.modal-content .form-row {
+    flex-wrap: wrap;
+}
+.modal-content .form-group {
+    min-width: 100%;
+}
