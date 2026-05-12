@@ -538,6 +538,7 @@ button:hover {
         font-size: 10px;
     }
 }
+/* Modal container - covers full screen, captures scroll */
 .modal {
     display: none;
     position: fixed;
@@ -548,26 +549,27 @@ button:hover {
     height: 100%;
     background-color: rgba(0,0,0,0.5);
     backdrop-filter: blur(3px);
-    overflow-y: auto;  /* Enables vertical scrolling on modal backdrop */
+    overflow-y: auto;  /* Enables scrolling on modal backdrop */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
+/* Modal content box - will scroll inside if needed */
 .modal-content {
     background: white;
-    margin: 30px auto;  /* Reduced top margin for small screens */
+    margin: 30px auto;
     padding: 25px;
     width: 90%;
     max-width: 550px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     position: relative;
-    max-height: 90vh;   /* Limit height to viewport */
-    overflow-y: auto;   /* Scroll inside modal if content too tall */
+    /* No max-height here - let it grow, modal container scrolls */
 }
 
+/* Close button stays at top of modal content */
 .close {
     position: sticky;
     top: 0;
-    right: 0;
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -575,13 +577,20 @@ button:hover {
     color: #888;
     background: white;
     padding: 0 5px;
+    z-index: 10;
 }
 .close:hover { color: black; }
 
-/* Ensure form elements don't overflow */
+/* Ensure form rows wrap on small screens */
 .modal-content .form-row {
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 15px;
 }
-.modal-content .form-group {
-    min-width: 100%;
+.modal-content .form-row .form-group {
+    width: 100%;
+}
+
+/* Prevent body scrolling when modal is open */
+body.modal-open {
+    overflow: hidden;
 }

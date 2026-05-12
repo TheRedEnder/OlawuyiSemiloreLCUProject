@@ -315,9 +315,17 @@ function editCourse(code) {
     document.getElementById('editCourseCapacity').value = c.capacity;
     document.getElementById('editCourseCredits').value = c.credits;
     document.getElementById('editCourseLevel').value = c.level;
-    document.getElementById('editModal').style.display = 'block';
+    openEditModal();  // Use the new function
 }
-function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
+function openEditModal() {
+    document.getElementById('editModal').style.display = 'block';
+    document.body.classList.add('modal-open');  // Prevent background scroll
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
 function saveCourseEdit(e) {
     e.preventDefault();
     const code = document.getElementById('editCourseId').value;
