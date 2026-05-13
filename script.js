@@ -141,11 +141,7 @@ async function register() {
         
         if (role === 'student') {
             const studentDept = document.getElementById('studentDept').value;
-            if (!studentDept) {
-                showMessage('Please select department', 'error');
-                await userCredential.user.delete();
-                return;
-            }
+            if (!studentDept) throw new Error('Please select department');
             let matricNumber = document.getElementById('matricNumber').value.trim();
             if (!matricNumber) {
                 matricNumber = `LCU/UG/22/${Math.floor(Math.random() * 10000)}`;
@@ -155,11 +151,7 @@ async function register() {
             userData.department = studentDept;
         } else {
             const lecturerDept = document.getElementById('lecturerDept').value;
-            if (!lecturerDept) {
-                showMessage('Please select department', 'error');
-                await userCredential.user.delete();
-                return;
-            }
+            if (!lecturerDept) throw new Error('Please select department');
             userData.department = lecturerDept;
         }
         
@@ -172,9 +164,18 @@ async function register() {
         }, 2000);
     } catch (error) {
         console.error(error);
+        // If Auth user was created but Firestore failed, delete the Auth user
         if (error.code === 'auth/email-already-in-use') {
             showMessage('Email already registered', 'error');
+        } else if (error.message && error.message.includes('department')) {
+            // If department missing, delete the just-created auth user
+            const user = window.auth.currentUser;
+            if (user) await user.delete();
+            showMessage(error.message, 'error');
         } else {
+            // Generic error: attempt to clean up Auth user if it exists
+            const user = window.auth.currentUser;
+            if (user) await user.delete();
             showMessage('Registration failed: ' + error.message, 'error');
         }
     }

@@ -216,38 +216,41 @@
 
     <script src="script.js"></script>
     <!-- Firebase SDK -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  
-    const firebaseConfig = {
-  apiKey: "AIzaSyC2nx7iEv30APiUe6fetUUAkZ0iKe7Amrw",
-  authDomain: "course-reg-project-semilore.firebaseapp.com",
-  projectId: "course-reg-project-semilore",
-  storageBucket: "course-reg-project-semilore.firebasestorage.app",
-  messagingSenderId: "809300143596",
-  appId: "1:809300143596:web:9f3f17af1f753a16b124c9",
-  measurementId: "G-FK124YD4DF"
-};
-  
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-  
-    window.db = db;
-    window.auth = auth;
-    window.collection = collection;
-    window.addDoc = addDoc;
-    window.getDocs = getDocs;
-    window.doc = doc;
-    window.updateDoc = updateDoc;
-    window.deleteDoc = deleteDoc;
-    window.query = query;
-    window.where = where;
-    window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-    window.signOut = signOut;
-  </script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+      
+        const firebaseConfig = {
+          apiKey: "AIzaSyC2nx7iEv30APiUe6fetUUAkZ0iKe7Amrw",
+          authDomain: "course-reg-project-semilore.firebaseapp.com",
+          projectId: "course-reg-project-semilore",
+          storageBucket: "course-reg-project-semilore.firebasestorage.app",
+          messagingSenderId: "809300143596",
+          appId: "1:809300143596:web:9f3f17af1f753a16b124c9",
+          measurementId: "G-FK124YD4DF"
+        };
+      
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+      
+        // Export everything needed
+        window.db = db;
+        window.auth = auth;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.getDocs = getDocs;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.updateDoc = updateDoc;
+        window.deleteDoc = deleteDoc;
+        window.query = query;
+        window.where = where;
+        window.getDoc = getDoc;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.signOut = signOut;
+      </script>
 </body>
 </html>
