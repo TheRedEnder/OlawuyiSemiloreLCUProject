@@ -289,7 +289,6 @@ async function displayAvailableCourses() {
     const enrollCount = (await getDocs(query(collection(db, 'enrollments'), where('courseId', '==', course.id)))).size;
     const isRegistered = enrolledIds.includes(course.id);
     const isFull = enrollCount >= course.capacity;
-    // Simplified clash check (you can refine later)
     let hasClash = false;
     if (!isRegistered) {
       for (const enrollDoc of myEnrollSnap.docs) {
@@ -323,7 +322,6 @@ async function registerCourse(courseId) {
   if (!existing.empty) return alert('Already registered');
   const enrollCount = (await getDocs(query(collection(db, 'enrollments'), where('courseId', '==', courseId)))).size;
   if (enrollCount >= course.capacity) return alert('Course full');
-  // Clash check
   const myEnrollments = await getDocs(query(collection(db, 'enrollments'), where('studentId', '==', currentUser.uid)));
   for (const enroll of myEnrollments.docs) {
     const existingSnap = await getDoc(doc(db, 'courses', enroll.data().courseId));
@@ -383,10 +381,10 @@ function generateTimetable(myCourses) {
   const slots = ['08:00-10:00','10:00-12:00','12:00-14:00','14:00-16:00','16:00-18:00'];
   let html = '<table class="timetable"><tr><th>Time</th>';
   days.forEach(d => html += `<th>${d}</th>`);
-  html += '</tr>';
+  html += '<tr>';
   slots.forEach(slot => {
     const [slotStart, slotEnd] = parseTimeRange(slot);
-    html += `<tr><td class="time-slot">${slot}</td>`;
+    html += `<tr><td class="time-slot">${slot}</tr>`;
     days.forEach(day => {
       const cells = myCourses.filter(c => c.day === day && (() => {
         const [cs, ce] = parseTimeRange(c.time);
@@ -411,3 +409,59 @@ function toMins(s) {
   return parseInt(h)*60 + parseInt(m||0);
 }
 function filterCourses() { displayAvailableCourses(); }
+
+// ==================== DELETE ACCOUNT (Basic Implementation) ====================
+async function deleteAccount() {
+  if (!currentUser) return alert('No user logged in');
+  const confirmMsg = currentUser.role === 'lecturer' 
+    ? 'WARNING: Deleting your lecturer account will remove ALL your courses and enrollments. This cannot be undone. Are you sure?'
+    : 'Delete your student account? All your registrations will be removed. This cannot be undone.';
+  if (!confirm(confirmMsg)) return;
+
+  try {
+    if (currentUser.role === 'lecturer') {
+      // Delete all courses created by this lecturer
+      const coursesSnap = await getDocs(query(collection(db, 'courses'), where('lecturerId', '==', currentUser.uid)));
+      for (const courseDoc of coursesSnap.docs) {
+        // Delete enrollments for this course
+        const enrollSnap = await getDocs(query(collection(db, 'enrollments'), where('courseId', '==', courseDoc.id)));
+        for (const enrollDoc of enrollSnap.docs) {
+          await deleteDoc(doc(db, 'enrollments', enrollDoc.id));
+        }
+        await deleteDoc(doc(db, 'courses', courseDoc.id));
+      }
+    } else {
+      // Student: delete their enrollments
+      const enrollSnap = await getDocs(query(collection(db, 'enrollments'), where('studentId', '==', currentUser.uid)));
+      for (const enrollDoc of enrollSnap.docs) {
+        await deleteDoc(doc(db, 'enrollments', enrollDoc.id));
+      }
+    }
+    // Delete user document from Firestore
+    await deleteDoc(doc(db, 'users', currentUser.uid));
+    // Delete Firebase Auth user
+    const user = auth.currentUser;
+    if (user) await user.delete();
+    alert('Account deleted successfully');
+    await signOut(auth);
+    window.location.href = 'index.html';
+  } catch (error) {
+    console.error(error);
+    alert('Error deleting account: ' + error.message);
+  }
+}
+
+// ==================== EXPOSE FUNCTIONS TO GLOBAL SCOPE ====================
+window.login = login;
+window.register = register;
+window.logout = logout;
+window.addCourse = addCourse;
+window.editCourse = editCourse;
+window.closeEditModal = closeEditModal;
+window.saveCourseEdit = saveCourseEdit;
+window.viewEnrollments = viewEnrollments;
+window.deleteCourse = deleteCourse;
+window.registerCourse = registerCourse;
+window.dropCourse = dropCourse;
+window.filterCourses = filterCourses;
+window.deleteAccount = deleteAccount;
